@@ -3,7 +3,33 @@ import HomeScreen from "@/app/components/home/Homecomponent";
 import MainLayout from "@/app/components/mainlayout/MainLayout";
 import Image from "next/image";
 import { FaApple, FaGooglePlay } from "react-icons/fa";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect } from "react";
+import { db } from "@/firebaseConfig";
+
 export default function ProjectScreen() {
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        console.log("Fetching users...");
+        const querySnapshot = await getDocs(collection(db, "users"));
+        const usersData = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+        console.log("Fetched Users:", usersData);
+        // setUsers(usersData);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
+    fetchUsers();
+  }, [])
+
   return (
     <>
       <MainLayout
@@ -35,7 +61,8 @@ export default function ProjectScreen() {
                           >
                             <Image
                               src="https://drive.usercontent.google.com/download?id=1bRRqxsjFxOsooqoQ2gAcOE9Fss4NC06w&export=view&authuser=0"
-                              alt="Profile" layout="fill" objectFit="cover"
+                              alt="Profile" objectFit="cover"
+                              layout="fill"
                             />
                           </div>
                           <h2 className="text-xl font-bold mt-4">Vrasio</h2>
